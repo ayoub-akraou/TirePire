@@ -24,8 +24,6 @@ const userSchema = new mongoose.Schema(
 		},
 		password: {
 			type: String,
-			minLength: [8, "too short password"],
-			maxLength: [20, "too long password"],
 			required: [true, "the password is required"],
 			select: false,
 		},
@@ -38,6 +36,6 @@ const userSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-const userModel = mongoose.model("User", userSchema);
+const UserModel = mongoose.model("User", userSchema);
 
-export default userModel;
+export default UserModel;
