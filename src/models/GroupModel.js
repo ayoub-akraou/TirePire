@@ -1,0 +1,33 @@
+import mongoose, { Schema, Types } from "mongoose";
+
+const groupSchema = new Schema(
+	{
+		name: {
+			type: String,
+			minLength: [5, "too short name"],
+			maxLength: [20, "too long name"],
+			required: true,
+			unique: true,
+		},
+		amount: {
+			type: Types.Decimal128,
+			default: 100,
+			min: 100,
+			max: 10000,
+		},
+		frequency: {
+			type: Number,
+			enum: [1, 2, 3, 4],
+			default: 1,
+		},
+		acceptMembers: {
+			type: Boolean,
+			default: true,
+		},
+	},
+	{ timestamps: true }
+);
+
+const GroupModel = mongoose.model("Group", groupSchema);
+
+export default GroupModel;
