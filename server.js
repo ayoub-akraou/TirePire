@@ -4,10 +4,10 @@ import cors from "cors";
 import morgan from "morgan";
 
 // Importer vos routes
-import userRoutes from "./routes/auth.routes.js";
+import dbConnect from "./src/config/db.js";
 
 // Initialiser dotenv
-dotenv.config({ path: "/.env" });
+dbConnect();
 
 const app = express();
 
