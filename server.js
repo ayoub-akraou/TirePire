@@ -8,6 +8,7 @@ import authRoutes from "./src/routes/auth.routes.js";
 import dbConnect from "./src/config/db.js";
 
 // Initialiser dotenv
+dotenv.config({ path: "./.env" });
 dbConnect();
 
 const app = express();
