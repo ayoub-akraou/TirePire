@@ -25,4 +25,26 @@ export default class AuthService {
 
 		return savedUser;
 	}
+
+	static async login(data) {
+		const { email, password } = data;
+		const user = await UserModel.findOne({ email }).select("+password");
+
+		if (!user || !(await bcrypt.compare(password, user.password))) {
+			const error = new Error("Invalid credentials");
+			error.statusCode = 401; // Unauthorized
+			throw error;
+		}
+
+		const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.JWT_SECRET, {
+			expiresIn: "1d",
+		});
+
+		const userData = user.toObject();
+		userData.id = userData._id;
+		delete userData._id;
+		delete userData.password;
+
+		return { user: userData, token };
+	}
 }
