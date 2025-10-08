@@ -1,4 +1,5 @@
 import UserModel from "../models/UserModel.js";
+import blacklistModel from "../models/BlacklistModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -46,5 +47,10 @@ export default class AuthService {
 		delete userData.password;
 
 		return { user: userData, token };
+	}
+
+	static async logout(token) {
+		const decodedToken = jwt.decode(token);
+		await blacklistModel.create({ token, expiresAt: new Date(decodedToken.exp * 1000) });
 	}
 }
