@@ -4,6 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 
 // Importer vos routes
+import authRoutes from "./src/routes/auth.routes.js";
 import dbConnect from "./src/config/db.js";
 
 // Initialiser dotenv
@@ -18,7 +19,7 @@ app.use(express.json()); // parser JSON
 app.use(express.urlencoded({ extended: true })); // parser urlencoded
 
 // 2️⃣ Routes
-app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
 // 3️⃣ Route par défaut
 app.get("/", (req, res) => {
