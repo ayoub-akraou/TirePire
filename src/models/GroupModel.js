@@ -24,6 +24,10 @@ const groupSchema = new Schema(
 			type: Boolean,
 			default: true,
 		},
+		admin_id: {
+			type: Types.ObjectId,
+			ref: "User",
+		},
 	},
 	{ timestamps: true }
 );
