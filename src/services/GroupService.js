@@ -6,9 +6,9 @@ export default class GroupService {
 		return groups;
 	}
 
-	static async store(data, session) {
+	static async store(data) {
 		const newGroup = new GroupModel(data);
-		await newGroup.save({ session });
+		await newGroup.save();
 		return newGroup;
 	}
 

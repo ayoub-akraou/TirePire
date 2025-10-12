@@ -13,28 +13,23 @@ export default class GroupController {
 	}
 
 	static async store(req, res) {
-		const session = await mongoose.startSession();
+		let group_id;
 		try {
-			session.startTransaction();
-
 			const user_id = req.user?.id;
 			const data = { ...req.body, user_id };
 
-			const group = await GroupService.store(data, session);
+			const group = await GroupService.store(data);
 
-			await membershipModel.create(
-				{
-					group_id: group._id,
-					member_id: user_id,
-					status: "accepted",
-				},
-				{ session }
-			);
-			await session.commitTransaction();
+			group_id = group._id;
+
+			await membershipModel.create({
+				group_id,
+				member_id: user_id,
+				status: "accepted",
+			});
 			res.status(201).json({ success: true, data: group, message: "group created succesfuly" });
 		} catch (error) {
-			session.abortTransaction();
-			session.endSession();
+			await GroupService.delete(group_id);
 			res.status(400).json({ success: false, message: error.message });
 		}
 	}
