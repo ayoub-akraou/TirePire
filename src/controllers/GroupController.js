@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import membershipModel from "../models/MembershipModel.js";
 import GroupService from "../services/GroupService.js";
+import GroupModel from "../models/GroupModel.js";
 
 export default class GroupController {
 	static async index(req, res) {
@@ -16,7 +17,7 @@ export default class GroupController {
 		let group_id;
 		try {
 			const user_id = req.user?.id;
-			const data = { ...req.body, user_id };
+			const data = { ...req.body, admin_id: user_id };
 
 			const group = await GroupService.store(data);
 
@@ -29,7 +30,7 @@ export default class GroupController {
 			});
 			res.status(201).json({ success: true, data: group, message: "group created succesfuly" });
 		} catch (error) {
-			await GroupService.delete(group_id);
+			await GroupModel.findByIdAndDelete(group_id);
 			res.status(400).json({ success: false, message: error.message });
 		}
 	}
