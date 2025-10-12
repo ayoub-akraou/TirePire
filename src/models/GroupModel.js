@@ -27,6 +27,27 @@ const groupSchema = new Schema(
 		admin_id: {
 			type: Types.ObjectId,
 			ref: "User",
+			required: true,
+		},
+
+		cycles: {
+			type: [
+				{
+					cycle_number: { type: Number, required: true },
+					cycle_order: [
+						{
+							member_id: { type: Types.ObjectId, ref: "User", required: true },
+							paymentByMember: [
+								{
+									member_id: { type: Types.ObjectId, ref: "User", required: true },
+									payed: { type: Boolean, default: false },
+								},
+							],
+						},
+					],
+				},
+			],
+			default: [],
 		},
 	},
 	{ timestamps: true }
