@@ -37,7 +37,7 @@ export default class MembershipService {
 			throw new Error("membership is already exist!");
 		}
 
-		const newMembership = new MembershipModel({ group_id, member_id: invited_id, initiatedBy, status });
+		const newMembership = new MembershipModel({ group_id, member_id: invited_id, initiatedBy });
 		await newMembership.save();
 		return newMembership;
 	}
