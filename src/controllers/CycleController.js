@@ -11,4 +11,16 @@ export default class CycleController {
 			res.status(400).json({ success: false, message: error.message });
 		}
 	}
+
+	static async store(req, res) {
+		try {
+			const { group_id } = req.params;
+			const user_id = req.user.id;
+			const data = { ...req.body };
+			const cycle = await CycleService.store(group_id, user_id, data);
+			res.status(201).json({ success: true, data: cycle, message: "cycle created succesfuly" });
+		} catch (error) {
+			res.status(400).json({ success: false, message: error.message });
+		}
+	}
 }
