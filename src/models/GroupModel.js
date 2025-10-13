@@ -33,13 +33,13 @@ const groupSchema = new Schema(
 		cycles: {
 			type: [
 				{
-					cycle_number: { type: Number, required: true },
+					cycle_number: { type: Number, required: true, unique: true },
 					cycle_order: [
 						{
-							member_id: { type: Types.ObjectId, ref: "User", required: true },
+							member_id: { type: Types.ObjectId, ref: "User", required: true, unique: true },
 							paymentByMember: [
 								{
-									member_id: { type: Types.ObjectId, ref: "User", required: true },
+									member_id: { type: Types.ObjectId, ref: "User", required: true, unique: true },
 									payed: { type: Boolean, default: false },
 								},
 							],
