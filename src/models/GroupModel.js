@@ -34,12 +34,31 @@ const groupSchema = new Schema(
 			type: [
 				{
 					cycle_number: { type: Number, required: true, unique: true },
+					start_date: {
+						type: Date,
+						validate: {
+							validator: (v) => v >= new Date(),
+							message: "Start date cannot be in the past",
+						},
+					},
+					end_date: {
+						type: Date,
+						validate: {
+							validator: function (v) {
+								return v > this.start_date;
+							},
+							message: "End date must be after the start date",
+						},
+					},
 					cycle_order: [
 						{
 							member_id: { type: Types.ObjectId, ref: "User", required: true, unique: true },
 							paymentByMember: [
 								{
 									member_id: { type: Types.ObjectId, ref: "User", required: true, unique: true },
+									name: { type: String, required: true },
+									email: { type: String, required: true },
+									profileImg: { type: String, required: true },
 									payed: { type: Boolean, default: false },
 								},
 							],
