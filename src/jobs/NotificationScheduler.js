@@ -7,3 +7,17 @@ import EmailService from "../services/EmailService.js";
 async function getGroupMembers(groupId) {
 	return MembershipModel.find({ group_id: groupId, status: "accepted" }).populate("member_id");
 }
+
+async function sendCycleStartReminder(group, cycle, startDate) {
+	const members = await getGroupMembers(group._id);
+
+	for (const m of members) {
+		await EmailService.send(
+			m.member_id.email,
+			`🔔 Le cycle ${group.name} démarre bientôt !`,
+			`	<p>Bonjour ${m.member_id.name},</p>
+				<p>Le cycle <b>${group.name}</b> commencera le <b>${startDate.format("DD/MM/YYYY")}</b>.</p>
+				<p>Montant à verser : <b>${group.amount} DH</b>.</p>`
+		);
+	}
+}
