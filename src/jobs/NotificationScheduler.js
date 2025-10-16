@@ -59,3 +59,53 @@ async function incrementCycleTurn(group, cycle) {
 	group.markModified("cycles");
 	await group.save();
 }
+
+export default function initNotificationScheduler() {
+	cron.schedule("0 0 0 * * *", async () => {
+		console.log("start");
+
+		const today = dayjs();
+
+		const groups = await GroupModel.find({
+			"cycles.start_date": { $exists: true, $ne: null },
+			acceptMembers: false,
+		})
+			.populate({
+				path: "cycles.cycle_order.member_id",
+				select: "name email profileImg",
+			})
+			.populate({
+				path: "cycles.cycle_order.paymentByMember.member_id",
+				select: "name email profileImg",
+			});
+
+		for (const group of groups) {
+			for (const cycle of group.cycles) {
+				const startDate = dayjs(cycle.start_date);
+				const frequency = group.frequency;
+
+				const totalMonths = frequency * cycle.cycle_order.length;
+
+				// Rappel avant le début
+				if (
+					startDate.subtract(1, "month").isSame(today, "day") &&
+					startDate.subtract(1, "month").isSame(today, "month") &&
+					startDate.subtract(1, "month").isSame(today, "year")
+				) {
+					await sendCycleStartReminder(group, cycle, startDate);
+				}
+
+				// Rappel mensuel
+				for (let i = 0; i < totalMonths; i += frequency) {
+					const paymentDate = startDate.add(i, "month");
+					if (paymentDate.isSame(today, "day")) {
+						await sendMonthlyPaymentReminder(group, cycle);
+						await incrementCycleTurn(group, cycle);
+					}
+				}
+			}
+		}
+
+		console.log("end");
+	});
+}
