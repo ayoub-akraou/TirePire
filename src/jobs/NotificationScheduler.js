@@ -21,3 +21,35 @@ async function sendCycleStartReminder(group, cycle, startDate) {
 		);
 	}
 }
+
+async function sendMonthlyPaymentReminder(group, cycle) {
+	const members = await getGroupMembers(group._id);
+	const currentTurnData = cycle.cycle_order[cycle.currentTurn];
+	const turnUser = currentTurnData?.member_id;
+
+	if (!turnUser) return;
+
+	await Promise.all(
+		members.map(async (m) => {
+			try {
+				await EmailService.send(
+					m.member_id.email,
+					`💰 Versement du mois - ${group.name}`,
+					`
+						<p>Bonjour ${m.member_id.name},</p>
+						<p>Le cycle <b>${group.name}</b> continue ce mois-ci.</p>
+						<p>Le bénéficiaire de ce tour est <b>${turnUser.name}</b>.</p>
+						<p>Veuillez lui verser la somme de <b>${group.amount} DH</b>.</p>
+						<p>RIB du bénéficiaire : <b>${turnUser.rib || "Non renseigné"}</b></p>
+						<hr/>
+						<p>Merci de votre participation et de votre ponctualité 💪</p>
+						<p>— L’équipe ${group.name}</p>
+					`
+				);
+				console.log(`✅ Email envoyé à ${m.member_id.email}`);
+			} catch (err) {
+				console.error(err);
+			}
+		})
+	);
+}
