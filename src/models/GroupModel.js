@@ -52,10 +52,10 @@ const groupSchema = new Schema(
 					},
 					cycle_order: [
 						{
-							member_id: { type: Types.ObjectId, ref: "User", required: true, unique: true },
+							member_id: { type: Types.ObjectId, ref: "User", required: true },
 							paymentByMember: [
 								{
-									member_id: { type: Types.ObjectId, ref: "User", required: true, unique: true },
+									member_id: { type: Types.ObjectId, ref: "User", required: true },
 									name: { type: String, required: true },
 									email: { type: String, required: true },
 									profileImg: { type: String, required: true },
@@ -64,6 +64,11 @@ const groupSchema = new Schema(
 							],
 						},
 					],
+					currentTurn: {
+						type: Number,
+						default: 0,
+						min: 0,
+					},
 				},
 			],
 			default: [],
