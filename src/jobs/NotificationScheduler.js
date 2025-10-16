@@ -53,3 +53,9 @@ async function sendMonthlyPaymentReminder(group, cycle) {
 		})
 	);
 }
+
+async function incrementCycleTurn(group, cycle) {
+	cycle.currentTurn = cycle.currentTurn + 1;
+	group.markModified("cycles");
+	await group.save();
+}
