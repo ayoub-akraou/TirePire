@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/:group_id", authMiddleware, CycleController.index);
 router.post("/:group_id", authMiddleware, CycleController.store);
-router.get("/:group_id/start-cycle", authMiddleware, CycleController.startCycle);
+router.post("/start-cycle/:group_id", authMiddleware, CycleController.startCycle);
 // router.patch("/:id", authMiddleware, CycleController.update);
 // router.delete("/:group_id", authMiddleware, CycleController.destroy);
 
