@@ -7,7 +7,6 @@ const blacklistSchema = new mongoose.Schema({
 		unique: true,
 	},
 	expiresAt: {
-		required: true,
 		type: Date,
 	},
 });
