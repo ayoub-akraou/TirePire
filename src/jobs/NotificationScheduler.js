@@ -4,28 +4,22 @@ import GroupModel from "../models/GroupModel.js";
 import MembershipModel from "../models/MembershipModel.js";
 import EmailService from "../services/EmailService.js";
 
-async function getGroupMembers(groupId) {
-	return MembershipModel.find({ group_id: groupId, status: "accepted" }).populate("member_id");
-}
+async function getGroupMembers(groupId, turnMemberId) {
+	const members = await MembershipModel.find({
+		group_id: groupId,
+		status: "accepted",
+	}).populate("member_id");
 
-async function sendCycleStartReminder(group, cycle, startDate) {
-	const members = await getGroupMembers(group._id);
-
-	for (const m of members) {
-		await EmailService.send(
-			m.member_id.email,
-			`🔔 Le cycle ${group.name} démarre bientôt !`,
-			`	<p>Bonjour ${m.member_id.name},</p>
-				<p>Le cycle <b>${group.name}</b> commencera le <b>${startDate.format("DD/MM/YYYY")}</b>.</p>
-				<p>Montant à verser : <b>${group.amount} DH</b>.</p>`
-		);
-	}
+	// Exclure le membre qui a le tour actuel
+	return members.filter((member) => member.member_id._id.toString() !== turnMemberId.toString());
+	// return members;
 }
 
 async function sendMonthlyPaymentReminder(group, cycle) {
-	const members = await getGroupMembers(group._id);
 	const currentTurnData = cycle.cycle_order[cycle.currentTurn];
 	const turnUser = currentTurnData?.member_id;
+	const turnMemberId = turnUser._id;
+	const members = await getGroupMembers(group._id, turnMemberId);
 
 	if (!turnUser) return;
 
@@ -34,6 +28,7 @@ async function sendMonthlyPaymentReminder(group, cycle) {
 			try {
 				await EmailService.send(
 					m.member_id.email,
+					// "ayoubakraou@gmail.com",
 					`💰 Versement du mois - ${group.name}`,
 					`
 						<p>Bonjour ${m.member_id.name},</p>
@@ -60,9 +55,9 @@ async function incrementCycleTurn(group, cycle) {
 	await group.save();
 }
 
-export default function initNotificationScheduler() {
+export default async function initNotificationScheduler() {
 	cron.schedule("0 0 0 * * *", async () => {
-		console.log("start");
+		console.log("start job");
 
 		const today = dayjs();
 
@@ -83,17 +78,7 @@ export default function initNotificationScheduler() {
 			for (const cycle of group.cycles) {
 				const startDate = dayjs(cycle.start_date);
 				const frequency = group.frequency;
-
 				const totalMonths = frequency * cycle.cycle_order.length;
-
-				// Rappel avant le début
-				if (
-					startDate.subtract(1, "month").isSame(today, "day") &&
-					startDate.subtract(1, "month").isSame(today, "month") &&
-					startDate.subtract(1, "month").isSame(today, "year")
-				) {
-					await sendCycleStartReminder(group, cycle, startDate);
-				}
 
 				// Rappel mensuel
 				for (let i = 0; i < totalMonths; i += frequency) {
@@ -106,6 +91,6 @@ export default function initNotificationScheduler() {
 			}
 		}
 
-		console.log("end");
+		console.log("end job");
 	});
 }
