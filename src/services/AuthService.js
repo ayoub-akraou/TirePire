@@ -51,6 +51,8 @@ export default class AuthService {
 
 	static async logout(token) {
 		const decodedToken = jwt.decode(token);
-		await blacklistModel.create({ token, expiresAt: new Date(decodedToken.exp * 1000) });
+		const data = { token };
+		if (decodedToken.exp) data.expiresAt = new Date(decodedToken.exp * 1000);
+		await blacklistModel.create(data);
 	}
 }
