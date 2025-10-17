@@ -23,4 +23,16 @@ export default class CycleController {
 			res.status(400).json({ success: false, message: error.message });
 		}
 	}
+
+	static async startCycle(req, res) {
+		try {
+			const { group_id } = req.params;
+			const user_id = req.user.id;
+			const { start_date } = req.body;
+			const cycle = await CycleService.startCycle(group_id, start_date, user_id);
+			res.status(200).json({ success: true, data: cycle, message: "cycle started succesfuly" });
+		} catch (error) {
+			res.status(400).json({ success: false, message: error.message });
+		}
+	}
 }

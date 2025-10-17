@@ -2,8 +2,10 @@ import GroupModel from "../models/GroupModel.js";
 import dayjs from "dayjs";
 import EmailService from "./EmailService.js";
 export default class CycleService {
-	static async startCycle(group_id, start_date) {
+	static async startCycle(group_id, start_date, user_id) {
 		const group = await GroupModel.findById(group_id).populate("cycles.cycle_order.member_id");
+
+		if (user_id !== group.admin_id) throw new Error("the goup admin only can start the cycle!");
 
 		const startDate = dayjs(start_date);
 		const cycleAlreadyStarted = Boolean(group.acceptMembers === false);
