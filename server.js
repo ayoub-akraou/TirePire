@@ -7,11 +7,15 @@ import morgan from "morgan";
 import authRoutes from "./src/routes/auth.routes.js";
 import groupsRoutes from "./src/routes/groups.routes.js";
 import membershipsRoutes from "./src/routes/memberships.routes.js";
+import cyclesRoute from "./src/routes/cycles.routes.js";
+import initNotificationScheduler from "./src/jobs/NotificationScheduler.js";
+
 import dbConnect from "./src/config/db.js";
 
 // Initialiser dotenv
 dotenv.config({ path: "./.env" });
 dbConnect();
+initNotificationScheduler();
 
 const app = express();
 
@@ -25,6 +29,7 @@ app.use(express.urlencoded({ extended: true })); // parser urlencoded
 app.use("/api/auth", authRoutes);
 app.use("/api/groups/", groupsRoutes);
 app.use("/api/memberships/", membershipsRoutes);
+app.use("/api/cycles/", cyclesRoute);
 
 // Route par défaut
 app.get("/", (req, res) => {
