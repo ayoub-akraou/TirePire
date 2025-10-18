@@ -38,7 +38,7 @@ export default class AuthService {
 		}
 
 		const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.JWT_SECRET, {
-			expiresIn: "1d",
+			// expiresIn: "1d",
 		});
 
 		const userData = user.toObject();
@@ -51,6 +51,8 @@ export default class AuthService {
 
 	static async logout(token) {
 		const decodedToken = jwt.decode(token);
-		await blacklistModel.create({ token, expiresAt: new Date(decodedToken.exp * 1000) });
+		const data = { token };
+		if (decodedToken.exp) data.expiresAt = new Date(decodedToken.exp * 1000);
+		await blacklistModel.create(data);
 	}
 }

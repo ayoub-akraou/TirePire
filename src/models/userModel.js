@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema(
 			enum: ["regular", "admin"],
 			default: "regular",
 		},
+		rib: {
+			type: String,
+			unique: true,
+			required: [true, "the RIB is required!"],
+			match: [/^[0-9]{24}$/, "RIB should have 24 character!"],
+		},
 	},
 	{ timestamps: true }
 );
