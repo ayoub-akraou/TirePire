@@ -13,7 +13,7 @@ export default class GroupController {
 				message: "Groups retrieved successfully!",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -27,7 +27,7 @@ export default class GroupController {
 				message: "Groups retrieved successfully!",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -53,7 +53,7 @@ export default class GroupController {
 			});
 		} catch (error) {
 			await GroupModel.findByIdAndDelete(group_id);
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -67,7 +67,7 @@ export default class GroupController {
 				message: "group retrieved succesfuly!",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -79,7 +79,7 @@ export default class GroupController {
 			await GroupService.delete(id);
 			res.sendStatus(204);
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 }
