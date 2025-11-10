@@ -17,7 +17,20 @@ export default class GroupController {
 		}
 	}
 
-	static async getAllByUser(req, res) {
+	static async getGroupsCreatedByUser(req, res) {
+		try {
+			const user_id = req.user?.id;
+			const groups = await GroupService.getGroupsCreatedByUser(user_id);
+			res.status(200).json({
+				success: true,
+				data: groups,
+				message: "Groups retrieved successfully!",
+			});
+		} catch (error) {
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
+		}
+	}
+
 		try {
 			const user_id = req.user?.id;
 			const groups = await GroupService.getAllByUser(user_id);
