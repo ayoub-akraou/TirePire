@@ -1,7 +1,9 @@
 import UserModel from "../models/UserModel.js";
-class UserRepository {
-    static async findByEmail(email) {
-        return await UserModel.findOne({ email });
+import bcrypt from "bcryptjs";
+
+export default class UserRepository {
+    static async findByEmail(email, selectPassword = false) {
+        return await UserModel.findOne({ email }).select(selectPassword ? "+password" : "-password");
     }
 
     static async createUser(data) {
