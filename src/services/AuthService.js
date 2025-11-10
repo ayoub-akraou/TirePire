@@ -2,11 +2,12 @@ import UserModel from "../models/UserModel.js";
 import blacklistModel from "../models/BlacklistModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import UserRepository from "../repositories/UserRepository.js";
 
 export default class AuthService {
 	static async register(data) {
-		const { email, password } = data;
-		const isAlreadyExist = await UserModel.findOne({ email });
+		const { email } = data;
+		const isAlreadyExist = await UserRepository.findByEmail(email);
 
 		if (isAlreadyExist) {
 			const error = new Error("email already exist! use another email or login!");
@@ -14,17 +15,8 @@ export default class AuthService {
 			throw error;
 		}
 
-		const hashedPassword = await bcrypt.hash(password, 10);
-
-		const user = new UserModel({ ...data, password: hashedPassword });
-		const savedUser = (await user.save()).toObject();
-
-		savedUser.id = savedUser._id;
-
-		delete savedUser._id;
-		delete savedUser.password;
-
-		return savedUser;
+		const user = await UserRepository.createUser(data);
+		return user;
 	}
 
 	static async login(data) {
