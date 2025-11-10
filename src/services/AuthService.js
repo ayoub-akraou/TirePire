@@ -21,7 +21,7 @@ export default class AuthService {
 
 	static async login(data) {
 		const { email, password } = data;
-		const user = await UserModel.findOne({ email }).select("+password");
+		const user = await UserRepository.findByEmail(email, true);
 
 		if (!user || !(await bcrypt.compare(password, user.password))) {
 			const error = new Error("Invalid credentials");
@@ -33,12 +33,9 @@ export default class AuthService {
 			// expiresIn: "1d",
 		});
 
-		const userData = user.toObject();
-		userData.id = userData._id;
-		delete userData._id;
-		delete userData.password;
+		delete user.password;
 
-		return { user: userData, token };
+		return { user, token };
 	}
 
 	static async logout(token) {
