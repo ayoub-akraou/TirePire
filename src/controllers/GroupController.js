@@ -7,7 +7,25 @@ export default class GroupController {
 	static async index(req, res) {
 		try {
 			const groups = await GroupService.getAll();
-			res.status(200).json({ success: true, data: groups, message: "Groups retrieved successfully!" });
+			res.status(200).json({
+				success: true,
+				data: groups,
+				message: "Groups retrieved successfully!",
+			});
+		} catch (error) {
+			res.status(400).json({ success: false, message: error.message });
+		}
+	}
+
+	static async getAllByUser(req, res) {
+		try {
+			const user_id = req.user?.id;
+			const groups = await GroupService.getAllByUser(user_id);
+			res.status(200).json({
+				success: true,
+				data: groups,
+				message: "Groups retrieved successfully!",
+			});
 		} catch (error) {
 			res.status(400).json({ success: false, message: error.message });
 		}
@@ -28,7 +46,11 @@ export default class GroupController {
 				member_id: user_id,
 				status: "accepted",
 			});
-			res.status(201).json({ success: true, data: group, message: "group created succesfuly" });
+			res.status(201).json({
+				success: true,
+				data: group,
+				message: "group created succesfuly",
+			});
 		} catch (error) {
 			await GroupModel.findByIdAndDelete(group_id);
 			res.status(400).json({ success: false, message: error.message });
@@ -39,7 +61,11 @@ export default class GroupController {
 		try {
 			const id = req.params.id;
 			const group = await GroupService.getOne(id);
-			res.status(200).json({ success: true, data: group, message: "group retrieved succesfuly!" });
+			res.status(200).json({
+				success: true,
+				data: group,
+				message: "group retrieved succesfuly!",
+			});
 		} catch (error) {
 			res.status(400).json({ success: false, message: error.message });
 		}

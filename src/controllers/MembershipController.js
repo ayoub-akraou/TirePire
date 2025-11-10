@@ -4,7 +4,11 @@ export default class MembershipController {
 	static async index(req, res) {
 		try {
 			const memberships = await MembershipService.getAll();
-			res.status(200).json({ success: true, data: memberships, message: "memberships retrieved successfully!" });
+			res.status(200).json({
+				success: true,
+				data: memberships,
+				message: "memberships retrieved successfully!",
+			});
 		} catch (error) {
 			res.status(400).json({ success: false, message: error.message });
 		}
@@ -14,7 +18,11 @@ export default class MembershipController {
 		try {
 			const data = { ...req.body, user_id: req.user.id };
 			const membership = await MembershipService.store(data);
-			res.status(201).json({ success: true, data: membership, message: "membership created succesfuly" });
+			res.status(201).json({
+				success: true,
+				data: membership,
+				message: "membership created succesfuly",
+			});
 		} catch (error) {
 			res.status(400).json({ success: false, message: error.message });
 		}
@@ -24,7 +32,11 @@ export default class MembershipController {
 		try {
 			const data = { ...req.body, user_id: req.user.id };
 			const membership = await MembershipService.accept(data);
-			res.status(201).json({ success: true, data: membership, message: "membership created succesfuly" });
+			res.status(201).json({
+				success: true,
+				data: membership,
+				message: "membership created succesfuly",
+			});
 		} catch (error) {
 			res.status(400).json({ success: false, message: error.message });
 		}
@@ -34,7 +46,11 @@ export default class MembershipController {
 		try {
 			const id = req.params.id;
 			const membership = await MembershipService.getOne(id);
-			res.status(200).json({ success: true, data: membership, message: "membership retrieved succesfuly!" });
+			res.status(200).json({
+				success: true,
+				data: membership,
+				message: "membership retrieved succesfuly!",
+			});
 		} catch (error) {
 			res.status(400).json({ success: false, message: error.message });
 		}

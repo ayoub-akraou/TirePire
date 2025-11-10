@@ -23,4 +23,14 @@ export default class GroupService {
 		if (!group) throw new Error("Not Found");
 		return group;
 	}
+
+	static async getGroupsCreatedByUser(user_id) {
+		const groups = await GroupModel.find({ admin_id: user_id });
+		return groups;
+	}
+
+	static async getGroupsMemberedByUser(user_id) {
+		const groups = await GroupModel.find({ admin_id: user_id });
+		return groups;
+	}
 }

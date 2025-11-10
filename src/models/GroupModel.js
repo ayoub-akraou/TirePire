@@ -55,7 +55,11 @@ const groupSchema = new Schema(
 							member_id: { type: Types.ObjectId, ref: "User", required: true },
 							paymentByMember: [
 								{
-									member_id: { type: Types.ObjectId, ref: "User", required: true },
+									member_id: {
+										type: Types.ObjectId,
+										ref: "User",
+										required: true,
+									},
 									name: { type: String, required: true },
 									email: { type: String, required: true },
 									profileImg: { type: String, required: true },
