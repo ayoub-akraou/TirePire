@@ -5,7 +5,7 @@ export default class AuthController {
 			const user = await AuthService.register(req.body);
 			res.status(201).json({ success: true, data: user });
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -14,7 +14,7 @@ export default class AuthController {
 			const data = await AuthService.login(req.body);
 			res.status(200).json({ success: true, data });
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -24,7 +24,7 @@ export default class AuthController {
 			await AuthService.logout(token);
 			res.status(200).json({ success: true, message: "logout succeded" });
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 }
