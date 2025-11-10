@@ -22,8 +22,8 @@ const app = express();
 // Middlewares globaux
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json()); // parser JSON
-app.use(express.urlencoded({ extended: true })); // parser urlencoded
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 
 // Routes
 app.use("/api/auth", authRoutes);
