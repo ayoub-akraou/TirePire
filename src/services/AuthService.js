@@ -3,6 +3,7 @@ import blacklistModel from "../models/BlacklistModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import UserRepository from "../repositories/UserRepository.js";
+import BlacklistRepository from "../repositories/BlacklistRepository.js";
 
 export default class AuthService {
 	static async register(data) {
@@ -42,6 +43,6 @@ export default class AuthService {
 		const decodedToken = jwt.decode(token);
 		const data = { token };
 		if (decodedToken.exp) data.expiresAt = new Date(decodedToken.exp * 1000);
-		await blacklistModel.create(data);
+		await BlacklistRepository.create(data);
 	}
 }
