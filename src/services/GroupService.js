@@ -1,26 +1,33 @@
-import GroupModel from "../models/GroupModel.js";
+import GroupRepository from "../repositories/GroupRepository.js";
 
 export default class GroupService {
 	static async getAll() {
-		const groups = await GroupModel.find();
+		const groups = await GroupRepository.getAll();
 		return groups;
 	}
 
 	static async store(data) {
-		const newGroup = new GroupModel(data);
-		await newGroup.save();
-		return newGroup;
+		return await GroupRepository.create(data);
 	}
 
 	static async getOne(id) {
-		const group = await GroupModel.findById(id);
-		if (!group) throw new Error("Not Found");
+		const group = await GroupRepository.getOne(id);
+		if (!group) {
+			const error = new Error("Not Found");
+			error.statusCode = 404;
+			throw error;
+		}
 		return group;
 	}
 
 	static async delete(id) {
-		const group = await GroupModel.findByIdAndDelete(id);
-		if (!group) throw new Error("Not Found");
+		const group = await GroupRepository.getOne(id);
+		if (!group) {
+			const error = new Error("Not Found");
+			error.statusCode = 404;
+			throw error;
+		}
+		await GroupRepository.delete(id);
 		return group;
 	}
 
@@ -30,7 +37,7 @@ export default class GroupService {
 	}
 
 	static async getGroupsMemberedByUser(user_id) {
-		const groups = await GroupModel.find({ admin_id: user_id });
+		const groups = await GroupModel.find({}).populate({path: "memberships", match: {member_id: user_id, status: "accepted"}});
 		return groups;
 	}
 }
