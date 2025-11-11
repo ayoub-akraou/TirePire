@@ -1,9 +1,20 @@
 import GroupModel from "../models/GroupModel.js";
 import dayjs from "dayjs";
 import EmailService from "./EmailService.js";
+import GroupRepository from "../repositories/GroupRepository.js";
 export default class CycleService {
+	static async getAll(group_id) {
+		const group = await GroupRepository.getOne({ _id: group_id });
+		if (!group) {
+			const error = new Error("group not found");
+			error.statusCode = 404;
+			throw error;
+		}
+		return group.cycles;
+	}
+
 	static async startCycle(group_id, start_date, user_id) {
-		const group = await GroupModel.findById(group_id).populate("cycles.cycle_order.member_id");
+		const group = await GroupRepository.getOne({ _id: group_id });
 
 		if (user_id !== group.admin_id) {
 			const error = new Error("the goup admin only can start the cycle!");
