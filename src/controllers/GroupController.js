@@ -55,11 +55,8 @@ export default class GroupController {
 
 			group_id = group._id;
 
-			await membershipModel.create({
-				group_id,
-				member_id: user_id,
-				status: "accepted",
-			});
+			await MembershipService.store({ group_id, member_id: user_id, status: "accepted" });
+
 			res.status(201).json({
 				success: true,
 				data: group,
