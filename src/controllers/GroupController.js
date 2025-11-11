@@ -66,7 +66,7 @@ export default class GroupController {
 				message: "group created succesfuly",
 			});
 		} catch (error) {
-			await GroupModel.findByIdAndDelete(group_id);
+			await GroupService.delete(group_id);
 			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
