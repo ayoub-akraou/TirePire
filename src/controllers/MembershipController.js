@@ -28,20 +28,6 @@ export default class MembershipController {
 		}
 	}
 
-	static async accept(req, res) {
-		try {
-			const data = { ...req.body, user_id: req.user.id };
-			const membership = await MembershipService.accept(data);
-			res.status(201).json({
-				success: true,
-				data: membership,
-				message: "membership created succesfuly",
-			});
-		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
-		}
-	}
-
 	static async show(req, res) {
 		try {
 			const id = req.params.id;
