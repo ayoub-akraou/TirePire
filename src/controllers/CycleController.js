@@ -12,7 +12,7 @@ export default class CycleController {
 				message: "cycles retrieved successfully!",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -28,7 +28,7 @@ export default class CycleController {
 				message: "cycle created succesfuly",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -44,7 +44,7 @@ export default class CycleController {
 				message: "cycle started succesfuly",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 }

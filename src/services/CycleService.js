@@ -5,7 +5,11 @@ export default class CycleService {
 	static async startCycle(group_id, start_date, user_id) {
 		const group = await GroupModel.findById(group_id).populate("cycles.cycle_order.member_id");
 
-		if (user_id !== group.admin_id) throw new Error("the goup admin only can start the cycle!");
+		if (user_id !== group.admin_id) {
+			const error = new Error("the goup admin only can start the cycle!");
+			error.statusCode = 403;
+			throw error;
+		}
 
 		const startDate = dayjs(start_date);
 		const cycleAlreadyStarted = Boolean(group.acceptMembers === false);
@@ -33,7 +37,9 @@ export default class CycleService {
 				);
 			}
 		} else {
-			throw new Error("cycle already started");
+			const error = new Error("cycle already started");
+			error.statusCode = 409;
+			throw error;
 		}
 	}
 }
