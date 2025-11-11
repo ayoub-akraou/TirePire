@@ -2,7 +2,7 @@ import GroupModel from "../models/GroupModel.js";
 
 export default class GroupRepository {
 	static async getAll() {
-		return await GroupModel.find();
+		return await GroupModel.find().populate("cycles.cycle_order.member_id");
 	}
 
 	static async create(data) {
@@ -12,14 +12,16 @@ export default class GroupRepository {
 	}
 
 	static async getOne(filter) {
-		return await GroupModel.findOne(filter);
+		return await GroupModel.findOne(filter).populate("cycles.cycle_order.member_id");
 	}
 
 	static async getGroupsMemberedByUser(user_id) {
-		return await GroupModel.find({}).populate({
-			path: "memberships",
-			match: { member_id: user_id, status: "accepted" },
-		});
+		return await GroupModel.find({})
+			.populate("cycles.cycle_order.member_id")
+			.populate({
+				path: "memberships",
+				match: { member_id: user_id, status: "accepted" },
+			});
 	}
 
 	static async delete(id) {
