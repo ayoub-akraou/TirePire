@@ -1,16 +1,17 @@
 import MembershipModel from "../models/MembershipModel.js";
-import GroupModel from "../models/GroupModel.js";
+import MembershipRepository from "../repositories/MembershipRepository.js";
+import GroupRepository from "../repositories/GroupRepository.js";
 
 export default class MembershipService {
 	static async getAll() {
-		const memberships = await MembershipModel.find();
+		const memberships = await MembershipRepository.getAll();
 		return memberships;
 	}
 
 	static async store(data) {
 		const { group_id, user_id, member_id } = data;
 
-		const group = await GroupModel.findById(group_id);
+		const group = await GroupRepository.getOne({ _id: group_id });
 
 		if (!group) {
 			const error = new Error("Not Found");
@@ -32,7 +33,7 @@ export default class MembershipService {
 			throw error;
 		}
 
-		const membershipExist = await MembershipModel.findOne({
+		const membershipExist = await MembershipRepository.getOne({
 			group_id,
 			member_id,
 		});
@@ -43,12 +44,16 @@ export default class MembershipService {
 			throw error;
 		}
 
-		const newMembership = new MembershipModel({ group_id, member_id: invited_id, initiatedBy });
-		await newMembership.save();
+		const newMembership = MembershipRepository.create({
+			group_id,
+			member_id: invited_id,
+			initiatedBy,
+		});
 		return newMembership;
 	}
 
 	static async getOne(id) {
+		const membership = await MembershipRepository.getOne({ _id: id });
 		if (!membership) {
 			const error = new Error("Not Found");
 			error.statusCode = 404;
@@ -58,6 +63,7 @@ export default class MembershipService {
 	}
 
 	static async delete(id) {
+		const membership = await MembershipRepository.delete(id);
 		if (!membership) {
 			const error = new Error("Not Found");
 			error.statusCode = 404;
