@@ -31,9 +31,10 @@ export default class GroupController {
 		}
 	}
 
+	static async getGroupsMemberedByUser(req, res) {
 		try {
 			const user_id = req.user?.id;
-			const groups = await GroupService.getAllByUser(user_id);
+			const groups = await GroupService.getGroupsMemberedByUser(user_id);
 			res.status(200).json({
 				success: true,
 				data: groups,
