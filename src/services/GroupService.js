@@ -11,7 +11,7 @@ export default class GroupService {
 	}
 
 	static async getOne(id) {
-		const group = await GroupRepository.getOne(id);
+		const group = await GroupRepository.getOne({id: id});
 		if (!group) {
 			const error = new Error("Not Found");
 			error.statusCode = 404;
@@ -21,7 +21,7 @@ export default class GroupService {
 	}
 
 	static async delete(id) {
-		const group = await GroupRepository.getOne(id);
+		const group = await GroupRepository.getOne({id: id});
 		if (!group) {
 			const error = new Error("Not Found");
 			error.statusCode = 404;
@@ -32,7 +32,7 @@ export default class GroupService {
 	}
 
 	static async getGroupsCreatedByUser(user_id) {
-		const groups = await GroupModel.find({ admin_id: user_id });
+		const groups = GroupRepository.getOne({ admin_id: user_id });
 		return groups;
 	}
 

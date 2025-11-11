@@ -11,8 +11,10 @@ export default class GroupRepository {
 		return newGroup;
 	}
 
-	static async getOne(id) {
-		return await GroupModel.findById(id);
+	static async getOne(filter) {
+		return await GroupModel.findOne(filter);
+	}
+
 	}
 
     static async delete(id) {
