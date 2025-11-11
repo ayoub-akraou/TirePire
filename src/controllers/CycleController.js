@@ -1,4 +1,3 @@
-import { param } from "express-validator";
 import CycleService from "../services/CycleService.js";
 
 export default class CycleController {
@@ -8,7 +7,7 @@ export default class CycleController {
 			const cycles = await CycleService.getAll(group_id);
 			res.status(200).json({
 				success: true,
-				data: cycles,
+				data: cycles, 
 				message: "cycles retrieved successfully!",
 			});
 		} catch (error) {
