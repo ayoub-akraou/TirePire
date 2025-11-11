@@ -15,9 +15,14 @@ export default class GroupRepository {
 		return await GroupModel.findOne(filter);
 	}
 
+	static async getGroupsMemberedByUser(user_id) {
+		return await GroupModel.find({}).populate({
+			path: "memberships",
+			match: { member_id: user_id, status: "accepted" },
+		});
 	}
 
-    static async delete(id) {
-        return await GroupModel.findByIdAndDelete(id);
-    }
+	static async delete(id) {
+		return await GroupModel.findByIdAndDelete(id);
+	}
 }

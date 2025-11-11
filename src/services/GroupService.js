@@ -37,7 +37,7 @@ export default class GroupService {
 	}
 
 	static async getGroupsMemberedByUser(user_id) {
-		const groups = await GroupModel.find({}).populate({path: "memberships", match: {member_id: user_id, status: "accepted"}});
+		const groups = await GroupRepository.getGroupsMemberedByUser(user_id);
 		return groups;
 	}
 }
