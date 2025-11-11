@@ -8,6 +8,7 @@ import authRoutes from "./src/routes/auth.routes.js";
 import groupsRoutes from "./src/routes/groups.routes.js";
 import membershipsRoutes from "./src/routes/memberships.routes.js";
 import cyclesRoute from "./src/routes/cycles.routes.js";
+import adminRoutes from "./src/routes/admin.routes.js";
 import initNotificationScheduler from "./src/jobs/NotificationScheduler.js";
 
 import dbConnect from "./src/config/db.js";
@@ -30,6 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/groups/", groupsRoutes);
 app.use("/api/memberships/", membershipsRoutes);
 app.use("/api/cycles/", cyclesRoute);
+app.use("/api/admin/", adminRoutes);
 
 // Route par défaut
 app.get("/", (req, res) => {
