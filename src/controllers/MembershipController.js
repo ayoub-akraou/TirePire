@@ -10,7 +10,7 @@ export default class MembershipController {
 				message: "memberships retrieved successfully!",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -24,7 +24,7 @@ export default class MembershipController {
 				message: "membership created succesfuly",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -38,7 +38,7 @@ export default class MembershipController {
 				message: "membership retrieved succesfuly!",
 			});
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 
@@ -50,7 +50,7 @@ export default class MembershipController {
 			await MembershipService.delete(id);
 			res.sendStatus(204);
 		} catch (error) {
-			res.status(400).json({ success: false, message: error.message });
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
 		}
 	}
 }

@@ -13,7 +13,9 @@ export default class MembershipService {
 		const group = await GroupModel.findById(group_id);
 
 		if (!group) {
-			throw new Error("group not found!");
+			const error = new Error("Not Found");
+			error.statusCode = 404;
+			throw error;
 		}
 
 		let invited_id = user_id;
@@ -25,7 +27,9 @@ export default class MembershipService {
 
 		const GroupAcceptMembers = group?.acceptMembers;
 		if (!GroupAcceptMembers) {
-			throw new Error("This Group is no longer open for new memberships!");
+			const error = new Error("This Group is no longer open for new memberships!");
+			error.statusCode = 403;
+			throw error;
 		}
 
 		const membershipExist = await MembershipModel.findOne({
@@ -34,7 +38,9 @@ export default class MembershipService {
 		});
 
 		if (membershipExist) {
-			throw new Error("membership is already exist!");
+			const error = new Error("membership is already exist!");
+			error.statusCode = 409;
+			throw error;
 		}
 
 		const newMembership = new MembershipModel({ group_id, member_id: invited_id, initiatedBy });
@@ -43,14 +49,20 @@ export default class MembershipService {
 	}
 
 	static async getOne(id) {
-		const membership = await MembershipModel.findById(id);
-		if (!membership) throw new Error("Not Found");
+		if (!membership) {
+			const error = new Error("Not Found");
+			error.statusCode = 404;
+			throw error;
+		}
 		return membership;
 	}
 
 	static async delete(id) {
-		const membership = await MembershipModel.findByIdAndDelete(id);
-		if (!membership) throw new Error("Not Found");
+		if (!membership) {
+			const error = new Error("Not Found");
+			error.statusCode = 404;
+			throw error;
+		}
 		return membership;
 	}
 }
