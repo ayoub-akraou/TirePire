@@ -8,6 +8,11 @@ export default class MembershipService {
 		return memberships;
 	}
 
+	static async getMembers(group_id) {
+		const members = await MembershipRepository.getMembers(group_id);
+		return members;
+	}
+
 	static async store(data) {
 		const { group_id, user_id, member_id } = data;
 
