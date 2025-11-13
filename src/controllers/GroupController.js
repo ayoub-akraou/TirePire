@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import membershipModel from "../models/MembershipModel.js";
 import GroupService from "../services/GroupService.js";
 import GroupModel from "../models/GroupModel.js";
+import MembershipService from "../services/MembershipService.js";
 
 export default class GroupController {
 	static async index(req, res) {
@@ -11,6 +12,20 @@ export default class GroupController {
 				success: true,
 				data: groups,
 				message: "Groups retrieved successfully!",
+			});
+		} catch (error) {
+			res.status(error.statusCode || 500).json({ success: false, message: error.message });
+		}
+	}
+
+	static async getMembers(req, res) {
+		try {
+			const group_id = req.params.group_id;
+			const members = await MembershipService.getMembers(group_id);
+			res.status(200).json({
+				success: true,
+				data: members,
+				message: "members retrieved successfully!",
 			});
 		} catch (error) {
 			res.status(error.statusCode || 500).json({ success: false, message: error.message });
