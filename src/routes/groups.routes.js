@@ -9,7 +9,7 @@ router.get("/created", authMiddleware, GroupController.getGroupsCreatedByUser);
 router.get("/membered/", authMiddleware, GroupController.getGroupsMemberedByUser);
 router.post("/", authMiddleware, GroupController.store);
 router.get("/:id", authMiddleware, GroupController.show);
-// router.patch("/:id", authMiddleware, GroupController.update);
+router.get("/:id/members", authMiddleware, GroupController.getMembers);
 router.delete("/:id", authMiddleware, GroupController.destroy);
 
 export default router;
