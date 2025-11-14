@@ -35,8 +35,8 @@ export default class CycleController {
 		try {
 			const { group_id } = req.params;
 			const user_id = req.user.id;
-			const { start_date } = req.body;
-			const cycle = await CycleService.startCycle(group_id, start_date, user_id);
+			const data = { ...req.body, group_id, user_id };
+			const cycle = await CycleService.startCycle(data);
 			res.status(200).json({
 				success: true,
 				data: cycle,
