@@ -33,7 +33,7 @@ const groupSchema = new Schema(
 		cycles: {
 			type: [
 				{
-					cycle_number: { type: Number, required: true, unique: true },
+					cycle_number: { type: Number, required: true },
 					start_date: {
 						type: Date,
 						validate: {
